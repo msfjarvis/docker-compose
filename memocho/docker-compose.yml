@@ -1,0 +1,31 @@
+version: '3'
+services:
+  server:
+    image: msfjarvis/memocho:latest
+    ports:
+      - 8082:8082
+    environment:
+      - BIN_MONGO_CSTRING=mongodb://mongo:$MONGO_PORT/$MONGO_DB
+      - BIN_PORT=8082
+      - MONGO_PORT=$MONGO_PORT
+      - MONGO_DB=$MONGO_DB
+    depends_on:
+      - mongo
+    networks:
+      - mongo_network
+  mongo:
+    image: mongo:latest
+    volumes:
+      - mongo_volume:/data/db
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=$MONGO_DB
+    networks:
+      - mongo_network
+
+networks:
+  mongo_network:
+
+volumes:
+  mongo_volume:
